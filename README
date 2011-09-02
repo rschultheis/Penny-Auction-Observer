@@ -1,0 +1,30 @@
+Penny Auction Observer can record penny auctions taking place on penny auction websites.
+
+How the F do you use this thing?
+
+ruby bin/pa_auction_bot.rb -- help
+
+
+What the F does it do?
+
+I "observes" a live penny auction, and executes blocks of ruby code at the key events.
+The blocks of ruby code are stored in interchangeable hook files.
+The key events are:
+- Monitoring a new auction
+- New bids occur on a live auction
+- A timer threshold is reached
+- The auction ends
+
+
+What the F is it useful for?
+
+- Creating logs of penny auctions
+- Creating bots which can bid on penny auctions (not recommended by the authors of this tool)
+- Doing research on penny auctions
+
+
+Why the F did you make it?
+
+Penny auctions are an interesting thing.
+In my opinion they exploit weaknesses in the human psyche, much the same way gambling does.
+I wanted to collect data and study this phenomenon, strictly for my own fun.
