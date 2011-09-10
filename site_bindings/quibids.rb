@@ -8,8 +8,14 @@ module QUIBIDS
   @auction_els = nil
 
   def start auction_id
+    @auction_id = auction_id if auction_id
+
     @browser = Watir::Browser.new 'firefox'
-    @browser.goto "http://quibids.com/auctions/#{auction_id}"
+    goto_auction
+  end
+
+  def goto_auction
+    @browser.goto "http://quibids.com/auctions/#{@auction_id}"
   end
 
   def auction_name
@@ -24,7 +30,8 @@ module QUIBIDS
     @auction_els = {
       :timer            => @browser.div(:class => /timer2/	    ),
       :history          => @browser.div(:id => 'bidding-history' ).table,
-      :bid_btn		=> @browser.link(:class => /^bid/	    ),
+      #:bid_btn		=> @browser.link(:class => /^bid/	    ),
+      :bid_btn		=> @browser.link(:id => "button_#{@auction_id}"	    ),
     }
 
     #confirm all the elements are accessible
@@ -38,6 +45,8 @@ module QUIBIDS
       end
       puts "Found #{name}"
     end
+
+    puts "Bid Btn: #{@auction_els[:bid_btn].html}"
   end
 
   def refresh_auction
@@ -56,7 +65,14 @@ module QUIBIDS
   end
 
   def bid
-    @auction_els[:bid_btn].click
+    sleep 0.1  #this pause can be tweaked to give better last second catches
+    if seconds_left < 3
+      @auction_els[:bid_btn].click
+      puts "BID clicked!"
+    else
+      puts "SKIPPED BID at the last second.... timer didn't look ready'"
+
+    end
   end
 
   def seconds_left
@@ -93,6 +109,13 @@ module QUIBIDS
       end
     end
     bids
+  end
+
+  def login username, password
+    @browser.text_field(:name, 'username').set username
+    @browser.text_field(:name, 'password').set password
+    @browser.button(:id, 'login-btn').click
+    goto_auction
   end
 
 end

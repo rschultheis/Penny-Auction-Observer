@@ -66,6 +66,8 @@ class QB_Observer
           while (new_bids.count > 0)
             process_event :on_new_bids, new_bids
             sleep 1.0
+            secs_since_refresh += 1
+            @last_secs = cur_secs
             new_bids = get_new_bids
           end
 

@@ -35,13 +35,13 @@ OnNewBids = lambda {|new_bids|
 num_bids = 0
 OnTimerThreshold = lambda {|secs, browser|
   if @model.would_bid
-    #browser.bid
+    browser.bid
     num_bids += 1
-    puts "TIMER HIT: #{num_bids} so far"
+    puts "MODEL SAID TO BID: #{num_bids} so far"
     print "\a"
   else
     num_skips += 1
-    puts "SKIP: #{num_skips} so far"
+    puts "MODEL SAID TO SKIP BID: #{num_skips} so far"
   end
 }
 

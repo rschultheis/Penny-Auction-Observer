@@ -8,6 +8,7 @@ def parse_cmd_line
   options = {
       :hooks_file => 'bots/csv_logger.rb',
       :site => 'QUIBIDS',
+      :login => false,
   }
 
   optparse = OptionParser.new do |opts|
@@ -26,6 +27,13 @@ def parse_cmd_line
     opts.on("-s", "--site=SITE",
       "Specify the site to use, default is '#{options[:site]}'") { |site| options[:site] = site}
 
+    opts.on("-l", "--login=username:password",
+      "Specify username and password to login with, otherwise no username or password will be used") { |str|
+
+          (options[:username], options[:password]) = str.match(/^(.+):(.+)$/)[1,2]
+
+          options[:login] = true
+      }
 
   end
   optparse.parse!
@@ -48,6 +56,8 @@ load options[:hooks_file]
 
 pa_site = QB_Site.new options[:site].upcase
 pa_site.start auction_id
+
+pa_site.login(options[:username], options[:password]) if options[:login]
 
 auction_observer = QB_Observer.new pa_site
 
