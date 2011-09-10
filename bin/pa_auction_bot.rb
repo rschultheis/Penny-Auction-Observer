@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 require 'optparse'
 #require 'rubygems'
 
@@ -32,21 +33,23 @@ def parse_cmd_line
 end
 options = parse_cmd_line
 
-
+## Take care of loading the libraries... not sure if this is the best way but it works...
+BASE_DIR = File.dirname(File.dirname($0))
+LIB_DIR = File.join(BASE_DIR, 'lib')
+BOTS_DIR = File.join(BASE_DIR, 'bots')
+$: << LIB_DIR << BOTS_DIR
 
 require 'pa_site'
 require 'pa_observer'
 
-#setup the object
+#setup the auction observerobject object
 auction_id = options[:auction_id]
 load options[:hooks_file]
+
 pa_site = QB_Site.new options[:site].upcase
 pa_site.start auction_id
 
-
-
 auction_observer = QB_Observer.new pa_site
-
 
 auction_observer.hooks[:on_new_bids]    = OnNewBids
 auction_observer.hooks[:on_new_auction] = OnNewAuction

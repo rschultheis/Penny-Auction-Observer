@@ -48,7 +48,7 @@ module QUIBIDS
       checks += 1
       raise "Refresh failed to find auction again?!" if checks > 20
     end
-    while ( text(:timer) !~ /\d\d:\d\d:\d\d/ )
+    while ( @auction_els[:timer].text !~ /\d\d:\d\d:\d\d/ )
       sleep 0.5
       checks += 1
       raise "Refresh failed to find auction again?!" if checks > 20
