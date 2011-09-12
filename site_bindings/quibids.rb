@@ -6,6 +6,7 @@ module QUIBIDS
   @browser = nil
   @last_amt = nil
   @auction_els = nil
+  @logged_in = false
 
   def start auction_id
     @auction_id = auction_id if auction_id
@@ -67,10 +68,14 @@ module QUIBIDS
   def bid
     sleep 0.1  #this pause can be tweaked to give better last second catches
     if seconds_left < 3
-      @auction_els[:bid_btn].click
-      puts "BID clicked!"
+      if @logged_in
+        @auction_els[:bid_btn].click
+        puts "BID clicked!"
+      else
+        puts "BID would be clicked if logged in!"
+      end
     else
-      puts "SKIPPED BID at the last second.... timer didn't look ready'"
+      puts "SKIPPED BID at the last second because timer went up"
 
     end
   end
@@ -116,6 +121,7 @@ module QUIBIDS
     @browser.text_field(:name, 'password').set password
     @browser.button(:id, 'login-btn').click
     goto_auction
+    @logged_in = true
   end
 
 end
