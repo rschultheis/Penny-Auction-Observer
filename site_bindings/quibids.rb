@@ -66,9 +66,9 @@ module QUIBIDS
     end
   end
 
-  def bid
+  def bid(force=false)
     sleep 0.1  #this pause can be tweaked to give better last second catches
-    if seconds_left < 3
+    if force || (seconds_left < 3)
       if @logged_in
         @auction_els[:bid_btn].click
         puts "BID clicked!"
@@ -111,6 +111,7 @@ module QUIBIDS
     hdoc.search('//tr').reverse.each do |tr|
       bidder, amt, type = tr.search('//td').map {|tr| tr.inner_html}[1..3]
       amt = amt.pa_calc_amt
+      type = (type == 'BidOMatic') ? :automatic : :manual
       if amt > @last_amt
         bids << {
           :bidder => bidder,
@@ -126,7 +127,7 @@ module QUIBIDS
   def login username, password
     @browser.text_field(:name, 'username').set username
     @browser.text_field(:name, 'password').set password
-    @browser.button(:id, 'login-btn').click
+    @browser.button(:id, 'login').click
     goto_auction
     @logged_in = true
   end

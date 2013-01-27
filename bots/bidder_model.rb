@@ -59,10 +59,10 @@ class QB_Model
 
   def would_bid
 
-    #return false if @num_bids < 25
-    return false if @uniques[:u10] > 8
-    #return false if @uniques[:u20] > 9
-    #return false if (@autoq > 40) && (@uniques[:u10] > 3)
+    return false if @num_bids < 10
+    return false if @uniques[:u10] > 6
+    return false if @uniques[:u20] > 9
+    return false if (@autoq > 30) && (@uniques[:u10] > 3)
 
     return true
   end

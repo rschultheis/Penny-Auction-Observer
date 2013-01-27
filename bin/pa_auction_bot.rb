@@ -65,5 +65,6 @@ auction_observer.hooks[:on_new_bids]    = OnNewBids
 auction_observer.hooks[:on_new_auction] = OnNewAuction
 auction_observer.hooks[:on_auction_end] = OnAuctionEnd
 auction_observer.hooks[:on_timer_threshold] = OnTimerThreshold
+auction_observer.hooks[:four_seconds_left] = FourSecondsLeft if defined? FourSecondsLeft
 
 auction_observer.observe_auction

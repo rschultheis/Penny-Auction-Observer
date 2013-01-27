@@ -45,4 +45,11 @@ OnTimerThreshold = lambda {|secs, browser|
   end
 }
 
-
+FourSecondsLeft = lambda {|secs, browser|
+  if @model.would_bid
+    if rand < 0.07
+      puts "Random Bid!"
+      browser.bid(true)
+    end
+  end
+}

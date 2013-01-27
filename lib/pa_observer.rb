@@ -51,6 +51,10 @@ class QB_Observer
           process_event :on_timer_threshold, cur_secs, @pa_site
         end
 
+        if cur_secs == 4
+          process_event :four_seconds_left, cur_secs, @pa_site
+        end
+
         puts " - " + cur_secs.to_s
 
         #If the timer went up, then we have new bids to process
