@@ -8,6 +8,9 @@ last_amt = -1.0
 
 ### HELPERS
 def init_csv filename
+  unless File.directory? 'csv'
+    Dir.mkdir 'csv'
+  end
   filename = 'csv/' + filename + '.' + Time.now.strftime("%m%d%Y_%H%M") + '.csv'
   @csv_writer = File.open(filename, 'w')
   puts "Opened csv '#{filename}'"

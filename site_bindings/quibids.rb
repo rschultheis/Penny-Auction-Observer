@@ -20,7 +20,7 @@ module QUIBIDS
   end
 
   def auction_name
-    name = @browser.title
+    name = @browser.title.split(' -')[0]
     puts "auction name is '#{name}'"
     name
   end
@@ -29,10 +29,10 @@ module QUIBIDS
     #init some data
     @last_amt = -1.0
     @auction_els = {
-      :timer            => @browser.div(:class => /timer2/	    ),
-      :history          => @browser.div(:id => 'bidding-history' ).table,
+      :timer            => @browser.p(:class => 'large-timer2'),
+      :history          => @browser.table(:id => 'bid-history'),
       #:bid_btn		=> @browser.link(:class => /^bid/	    ),
-      :bid_btn		=> @browser.link(:id => "button_#{@auction_id}"	    ),
+      :bid_btn		=> @browser.link(:text => "Bid Now"),
     }
 
     #confirm all the elements are accessible
@@ -102,15 +102,16 @@ module QUIBIDS
   def get_new_bids
     cur_amt = @last_amt
     bids = []
-    @auction_els[:history].hashes.reverse.each do |bid_row|
-      new_bid = {
-                :bidder	=> bid_row['BIDDER'],
-                :amt	=> bid_row['BID'].pa_calc_amt,
-                :type	=> bid_row['TYPE'] =~ /BidOMatic/ ? :automatic : :manual,
-              }
-      if new_bid[:amt] > @last_amt
-        bids << new_bid
-        @last_amt = new_bid[:amt]
+    @auction_els[:history].rows.to_a.reverse.each do |bid_row|
+      x, bidder, amt, type = bid_row.cells.to_a.map {|c| c.text}
+      amt = amt.pa_calc_amt
+      if amt > @last_amt
+        bids << {
+          :bidder => bidder,
+          :amt => amt,
+          :type => type,
+          }
+        @last_amt = amt
       end
     end
     bids
