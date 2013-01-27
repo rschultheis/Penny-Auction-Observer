@@ -1,4 +1,5 @@
 require 'watir-webdriver'
+require 'hpricot'
 
 #this module implements
 module QUIBIDS
@@ -98,12 +99,17 @@ module QUIBIDS
   end
 
 
-   #improve this, have it parse static html to improve the data capture and eliminate live updating problem
   def get_new_bids
-    cur_amt = @last_amt
     bids = []
-    @auction_els[:history].rows.to_a.reverse.each do |bid_row|
-      x, bidder, amt, type = bid_row.cells.to_a.map {|c| c.text}
+
+    #to do this reliably is tricky, the table moves, 
+    #so going row-by-row / cell-by-cell with webdriver calls will cause accuracy issues
+    # instead, just pull out a snapshot of the html, and parse that out
+    # its actually faster this way too, and very accurate
+    hdoc = Hpricot(@auction_els[:history].html)
+
+    hdoc.search('//tr').reverse.each do |tr|
+      bidder, amt, type = tr.search('//td').map {|tr| tr.inner_html}[1..3]
       amt = amt.pa_calc_amt
       if amt > @last_amt
         bids << {
